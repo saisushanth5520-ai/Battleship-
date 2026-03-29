@@ -1,5 +1,13 @@
-# Project Proposal
+Project Proposal
+Game: Battleship
 
-Your project proposal should be written here. It should be about 1 page in length giving as many details as possible about the project including game functionality and brief architecture overview.
+Our group plans to build a web-based Battleship game where a single player competes against an AI opponent. The game is simple enough to pick up immediately but has enough strategic depth to make the AI behaviour genuinely interesting to design and showcase. It fits naturally into the browser environment, requires no prior gaming knowledge, and gives us a clear scope to work within while still meeting all the technical requirements of the project.
 
-It should be completed by the due date in the folder name
+The player will be presented with two grids rendered using HTML Canvas — one representing their own fleet and one representing the opponent's (the AI). At the start of each game, both the player and the AI place their ships either manually or through an automatic random placement option. Once placement is complete, the player and AI take turns firing at each other's grids. The game ends when all ships belonging to one side have been sunk, and the result is recorded to the player's profile.
+
+The AI opponent will go beyond simple random targeting. It will use a probability-based hunt-and-target strategy: during the hunt phase it fires at statistically optimal positions, and once a hit is registered it switches to target mode, systematically working around that hit to sink the ship before returning to the hunt. This creates a noticeably smarter opponent that the player can actually feel challenged by.
+
+Players will be able to register and log in with a username and password. All credentials and game data will be stored in MongoDB. Once logged in, a player can start a new game, and their ongoing game state will be saved automatically so they can return and continue where they left off. A game history page will show their past results including win/loss outcomes and basic statistics. The frontend will be built with HTML, CSS, and vanilla JavaScript, using HTML Canvas as the primary rendering layer for both grids. The backend will be a Node.js and Express server that handles authentication, game state persistence, and serves the static frontend files. MongoDB will store user accounts and serialized game states as JSON documents. The whole application will be containerized using Docker and docker-compose so it can be deployed and tested consistently.
+
+The project directory will follow a clean client/server split similar to the recommended structure in the specification, with separate modules for game logic, AI logic, API routes, and database models. Version control will be managed through the GitHub repository provided, with commits tracked throughout development to document the progression of the project.
+
