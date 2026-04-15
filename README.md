@@ -10,7 +10,7 @@ https://groupJ.stu.researchatmun.ca
 
 Project Videos:
 
-* Project Presentation: YouTube URL
+* Project Presentation: https://youtu.be/98BkrUoFeEE
 
 Project Setup / Installation:
 
