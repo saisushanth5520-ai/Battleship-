@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "battleship-dev",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Users/rizwa/OneDrive/Desktop/FINAL BATTLESHIP/server/index.js"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

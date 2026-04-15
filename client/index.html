@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battleship</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Splash Screen ── -->
+  <div id="splash-screen">
+    <div id="splash-title">
+      <span class="splash-letter" style="--i:0">B</span>
+      <span class="splash-letter" style="--i:1">A</span>
+      <span class="splash-letter" style="--i:2">T</span>
+      <span class="splash-letter" style="--i:3">T</span>
+      <span class="splash-letter" style="--i:4">L</span>
+      <span class="splash-letter" style="--i:5">E</span>
+      <span class="splash-letter" style="--i:6">S</span>
+      <span class="splash-letter" style="--i:7">H</span>
+      <span class="splash-letter" style="--i:8">I</span>
+      <span class="splash-letter" style="--i:9">P</span>
+    </div>
+    <div id="splash-sonar">
+      <div class="splash-ping"></div>
+      <div class="splash-ping delay1"></div>
+      <div class="splash-sonar-dot"></div>
+    </div>
+  </div>
+
+  <!-- ── Deploying Fleet Overlay ── -->
+  <div id="deploy-overlay" class="hidden">
+    <div id="deploy-text-wrap">
+      <span id="deploy-text">DEPLOYING FLEET</span><span id="deploy-dots"></span>
+    </div>
+  </div>
+
+  <!-- ── Navbar ── -->
+  <nav id="navbar" class="hidden">
+    <span id="nav-title">BATTLESHIP</span>
+    <div class="nav-right">
+      <span id="nav-username"></span>
+      <button id="btn-history">History</button>
+      <button id="btn-logout" class="btn-outline">Logout</button>
+    </div>
+  </nav>
+
+  <main id="app">
+
+    <!-- ── Auth Screen ── -->
+    <section id="screen-auth" class="screen hidden">
+      <h1>BATTLESHIP</h1>
+      <div id="auth-box">
+        <div id="auth-tabs">
+          <button id="tab-login"    class="tab active">Login</button>
+          <button id="tab-register" class="tab">Register</button>
+        </div>
+        <form id="form-login">
+          <input type="text"     id="login-username" placeholder="Username" autocomplete="username"          required />
+          <input type="password" id="login-password" placeholder="Password" autocomplete="current-password"  required />
+          <button type="submit" class="btn-primary btn-full">Login</button>
+        </form>
+        <form id="form-register" class="hidden">
+          <input type="text"     id="reg-username" placeholder="Username" autocomplete="username"    required />
+          <input type="password" id="reg-password" placeholder="Password" autocomplete="new-password" required />
+          <button type="submit" class="btn-primary btn-full">Create Account</button>
+        </form>
+        <p id="auth-error" class="msg-error hidden"></p>
+      </div>
+    </section>
+
+    <!-- ── Mode Selection Screen ── -->
+    <section id="screen-mode" class="screen hidden">
+      <h2>Choose Your Battle</h2>
+      <p class="subtitle">Select a game mode to begin</p>
+      <div id="mode-cards">
+        <button id="btn-play-ai" class="mode-card">
+          <span class="mode-icon">🤖</span>
+          <span class="mode-label">Play vs AI</span>
+          <span class="mode-desc">Face an intelligent computer opponent</span>
+        </button>
+        <button id="btn-play-pvp" class="mode-card">
+          <span class="mode-icon">⚔️</span>
+          <span class="mode-label">Play vs Player</span>
+          <span class="mode-desc">Challenge another player online</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── Ship Setup Screen ── -->
+    <section id="screen-setup" class="screen hidden">
+      <h2>Deploy Your Fleet</h2>
+      <p class="subtitle">Position your ships before battle begins</p>
+      <div id="setup-controls">
+        <button id="btn-random-place" class="btn-primary">Place Randomly</button>
+        <button id="btn-start-game"   class="btn-accent">Start Battle</button>
+      </div>
+      <p id="setup-status" class="msg-info"></p>
+    </section>
+
+    <!-- ── Game Screen ── -->
+    <section id="screen-game" class="screen hidden">
+
+      <!-- PvP waiting overlay -->
+      <div id="pvp-waiting" class="hidden">
+        <div id="pvp-sonar">
+          <div class="pvp-sonar-sweep"></div>
+          <div class="pvp-sonar-ring" style="--s:0.35"></div>
+          <div class="pvp-sonar-ring" style="--s:0.65"></div>
+          <div class="pvp-sonar-dot"></div>
+        </div>
+        <p id="pvp-scan-text">SCANNING FOR ENEMY VESSELS</p>
+      </div>
+
+      <!-- Radar decoration -->
+      <div id="radar-widget">
+        <div id="radar-sweep"></div>
+        <div class="radar-ring r1"></div>
+        <div class="radar-ring r2"></div>
+        <div class="radar-center"></div>
+      </div>
+
+      <!-- Top bar -->
+      <div id="game-topbar">
+        <span class="topbar-label">OPPONENT</span>
+        <span id="opponent-name">AI</span>
+      </div>
+
+      <!-- HUD -->
+      <div id="game-hud">
+        <div class="hud-panel" id="fleet-panel">
+          <div class="hud-panel-header">
+            <span class="hud-panel-title">YOUR FLEET</span>
+            <div id="health-bar-wrap">
+              <div id="health-bar-bg"><div id="health-bar-fill" class="health-green"></div></div>
+              <span id="health-pct">100%</span>
+            </div>
+          </div>
+          <canvas id="player-canvas" width="420" height="420"></canvas>
+        </div>
+
+        <div id="turn-divider">
+          <div id="turn-text">YOUR TURN</div>
+          <div id="shot-counters">
+            <div class="shot-block">
+              <div class="shot-val" id="player-shots">0</div>
+              <div class="shot-lbl">YOUR<br>SHOTS</div>
+            </div>
+            <div class="shot-sep"></div>
+            <div class="shot-block">
+              <div class="shot-val" id="enemy-shots">0</div>
+              <div class="shot-lbl">ENEMY<br>SHOTS</div>
+            </div>
+          </div>
+          <div id="game-status"></div>
+        </div>
+
+        <div class="hud-panel" id="enemy-panel">
+          <div class="hud-panel-header">
+            <span class="hud-panel-title">ENEMY WATERS</span>
+            <div id="reticle-wrap">
+              <div id="reticle">
+                <div class="ret-ring ret-outer"></div>
+                <div class="ret-ring ret-inner"></div>
+                <div class="ret-line ret-h"></div>
+                <div class="ret-line ret-v"></div>
+              </div>
+            </div>
+          </div>
+          <canvas id="ai-canvas" width="420" height="420"></canvas>
+        </div>
+      </div>
+
+      <!-- Event log -->
+      <div id="event-log">
+        <span class="event-log-title">◈ TACTICAL LOG</span>
+        <div id="event-entries"></div>
+      </div>
+
+    </section>
+
+    <!-- ── History Screen ── -->
+    <section id="screen-history" class="screen hidden">
+      <h2>Battle History</h2>
+
+      <!-- Stats cards -->
+      <div id="stats-row">
+        <div class="stats-card">
+          <div class="stats-card-val" id="scard-total">0</div>
+          <div class="stats-card-label">TOTAL GAMES</div>
+        </div>
+        <div class="stats-card stats-card-ring">
+          <div class="ring-container">
+            <svg class="ring-svg" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="7"/>
+              <circle id="ring-arc" cx="40" cy="40" r="32" fill="none" stroke="#00ffb3"
+                      stroke-width="7" stroke-linecap="round" stroke-dasharray="0 201"
+                      transform="rotate(-90 40 40)"/>
+            </svg>
+            <div class="ring-inner-val" id="scard-winrate">0%</div>
+          </div>
+          <div class="stats-card-label">OVERALL WIN RATE</div>
+        </div>
+        <div class="stats-card">
+          <div class="mode-rate-row">
+            <span class="mode-pill ai-pill">AI</span>
+            <span class="mode-rate-val" id="scard-ai-rate">—</span>
+          </div>
+          <div class="mode-rate-row">
+            <span class="mode-pill pvp-pill">PVP</span>
+            <span class="mode-rate-val" id="scard-pvp-rate">—</span>
+          </div>
+          <div class="stats-card-label">WIN RATE BY MODE</div>
+        </div>
+      </div>
+
+      <!-- Bar chart -->
+      <div id="history-chart-wrap">
+        <div class="chart-title">LAST 10 GAMES</div>
+        <svg id="history-chart" viewBox="0 0 440 90" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <!-- History table -->
+      <div id="history-table-wrap">
+        <table id="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Mode</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+        <p id="history-empty" class="msg-info hidden">No games played yet.</p>
+      </div>
+
+      <button id="btn-back-mode" class="btn-primary">Back to Menu</button>
+    </section>
+
+  </main>
+
+  <!-- ── Game Over Overlay ── -->
+  <div id="overlay-gameover" class="hidden">
+    <canvas id="confetti-canvas"></canvas>
+    <div id="gameover-panel">
+      <div id="gameover-title"></div>
+      <div id="gameover-stats">
+        <div class="stat-row">
+          <span class="stat-label">SHOTS FIRED</span>
+          <span class="stat-val" id="stat-shots">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">HITS</span>
+          <span class="stat-val" id="stat-hits">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">ACCURACY</span>
+          <span class="stat-val" id="stat-accuracy">0%</span>
+        </div>
+      </div>
+      <div id="gameover-buttons">
+        <button id="btn-play-again">PLAY AGAIN</button>
+        <button id="btn-view-history" class="btn-outline">VIEW HISTORY</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/socket.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where node:*)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/rizwa/AppData/Roaming/**)",
+      "Read(//c/Users/rizwa/**)",
+      "Bash(powershell -Command \"Get-Command node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\")",
+      "Bash(cmd //c \"where node\")",
+      "Bash(cmd //c \"netstat -ano | findstr :3000 | findstr LISTENING\")",
+      "Bash(cmd //c \"netstat -ano | findstr :4000 | findstr LISTENING\")",
+      "Bash(cmd //c \"cd \\\\\"C:\\\\Users\\\\rizwa\\\\OneDrive\\\\Desktop\\\\Battleship project\\\\server\\\\\" && node index.js\")",
+      "Bash(cmd //c \"where node 2>nul || echo notfound\")"
+    ]
+  }
+}
