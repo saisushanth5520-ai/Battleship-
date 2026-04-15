@@ -6,8 +6,7 @@ Project Group Members:
 * Group Member Name 2 (Rizwan Ahmed Javed, rizwanaj@mun.ca)
 
 Project URL
-
-* Paste your hosted web application URL here so I can test it
+https://groupJ.stu.researchatmun.ca
 
 Project Videos:
 
